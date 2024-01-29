@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { CustomHttpClientService } from './custom-http-client.service';
-import { TodoResponseDto } from '../interfaces/todo.model';
+import { TodoRequestDto, TodoResponseDto } from '../interfaces/todo.model';
 import { HttpParams } from '@angular/common/http';
 
 @Injectable({
@@ -22,5 +22,9 @@ export class TodoService {
   remove(id: number) {
     const params = new HttpParams().set('id', id);
     return this.http.delete<TodoResponseDto>(this._resource, params);
+  }
+
+  create(body: TodoRequestDto) {
+    return this.http.post<TodoResponseDto>(this._resource, body);
   }
 }

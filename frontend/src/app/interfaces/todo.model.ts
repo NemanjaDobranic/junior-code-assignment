@@ -3,3 +3,5 @@ export interface TodoResponseDto {
   name: string;
   completed: boolean;
 }
+
+export type TodoRequestDto = Omit<TodoResponseDto, 'id'>;
