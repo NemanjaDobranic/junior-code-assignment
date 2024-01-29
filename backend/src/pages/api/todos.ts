@@ -1,0 +1,39 @@
+import { NextApiRequest, NextApiResponse } from "next";
+import { StatusCodes } from "http-status-codes";
+import {
+  apiCreateTodo,
+  apiGetTodoList,
+  apiRemoveTodo,
+  apiToggleComplete,
+} from "@/app/services/todo.service";
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  switch (req.method) {
+    case "GET":
+      await apiGetTodoList(req, res);
+      break;
+    case "POST":
+      await apiCreateTodo(req, res);
+      break;
+    case "PATCH":
+      await apiToggleComplete(req, res);
+      break;
+    case "DELETE":
+      await apiRemoveTodo(req, res);
+      break;
+    default:
+      res
+        .status(StatusCodes.METHOD_NOT_ALLOWED)
+        .json({ message: "Method Not Allowed" });
+      break;
+  }
+}
+
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
