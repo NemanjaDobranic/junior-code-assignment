@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AuthResolver } from './resolvers/auth.resolver';
 
 export const routes: Routes = [
   {
@@ -10,6 +11,7 @@ export const routes: Routes = [
     path: 'home',
     loadComponent: () =>
       import('./pages/home/home.component').then((m) => m.HomeComponent),
+    resolve: [AuthResolver],
   },
   {
     path: 'sign-up',

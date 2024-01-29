@@ -18,7 +18,7 @@ export class CustomHttpClientService {
   get<T>(path: string, params?: HttpParams): Observable<T> {
     return this.http.get<T>(environment.apiUrl + path, {
       headers: {
-        Authorization: 'Bearer ' + this.token,
+        Authorization: 'Bearer ' + this.jwtService.token,
       },
       params: params ? params : {},
     });

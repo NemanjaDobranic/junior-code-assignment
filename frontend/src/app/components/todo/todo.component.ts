@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, inject } from '@angular/core';
 import { TodoService } from '../../services/todo.service';
 import { Subject, debounceTime, switchMap, take } from 'rxjs';
 import { TodoRequestDto, TodoResponseDto } from '../../interfaces/todo.model';

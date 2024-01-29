@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { JwtService } from '../../services/jwt.service';
 import { AuthService } from '../../services/auth.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-sign-in',
@@ -28,7 +29,10 @@ export class SignInComponent {
 
     this._authService.signIn(payload).subscribe(({ accessToken }) => {
       this._jwtService.token = accessToken;
-      this._router.navigate(['home']);
+      this._jwtService.token$.subscribe((val) => {
+        console.log(val)
+        this._router.navigate(['home']);
+      });
     });
   }
 }
