@@ -4,7 +4,10 @@ import { jwtVerify } from "jose";
 import { StatusCodes } from "http-status-codes";
 
 export async function middleware(request: NextRequest) {
-  const authHeader = request.headers.get("authorization");
+  if (request.method === "OPTIONS") {
+    return NextResponse.next();
+  }
+  const authHeader = request.headers.get("Authorization");
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return Response.json(
@@ -29,7 +32,6 @@ export async function middleware(request: NextRequest) {
     const response = NextResponse.next({
       request: { headers: requestHeaders },
     });
-
     // response.headers.set("x-hello-from-middleware2", "hello");
     return response;
   } catch (error) {

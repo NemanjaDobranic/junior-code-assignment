@@ -17,6 +17,7 @@ export default async function handler(
     methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     origin: "*",
     optionsSuccessStatus: 200,
+    allowedHeaders: ["Content-Type", "Authorization"], // Add 'Authorization' to allowed headers
   });
 
   switch (req.method) {
@@ -32,6 +33,8 @@ export default async function handler(
     case "DELETE":
       await apiRemoveTodo(req, res);
       break;
+    case "OPTIONS":
+      return res.status(200).send("ok");
     default:
       res
         .status(StatusCodes.METHOD_NOT_ALLOWED)
