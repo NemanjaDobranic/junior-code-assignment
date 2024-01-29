@@ -10,6 +10,8 @@ const getTodoList: ApiHandlerFunction<TodoResponseDto[]> = async (
   res,
   prisma: PrismaClient
 ) => {
+  const { name } = req.query;
+
   const todoList = await prisma.todo.findMany({
     select: {
       id: true,
@@ -17,6 +19,9 @@ const getTodoList: ApiHandlerFunction<TodoResponseDto[]> = async (
       completed: true,
     },
     where: {
+      name: {
+        contains: name ? name as string : "",
+      },
       deleted: false,
     },
     orderBy: { id: "desc" },
