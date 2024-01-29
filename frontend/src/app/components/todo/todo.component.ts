@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { TodoItemComponent } from '../todo-item/todo-item.component';
 import { FormsModule } from '@angular/forms';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-todo',
@@ -17,6 +18,8 @@ import { SearchBarComponent } from '../search-bar/search-bar.component';
 export class TodoComponent implements OnDestroy {
   private _searchSubject = new Subject<string>();
   private _todoService = inject(TodoService);
+  private _userService = inject(UserService);
+  user$ = this._userService.user$;
   todoName: string = '';
   todoList: TodoResponseDto[] = [];
 

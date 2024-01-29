@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { StatusCodes } from "http-status-codes";
 import {
   apiCreateUser,
+  apiGetUser,
   apiGetUserList,
   apiRemoveUser,
 } from "@/app/services/user.service";
@@ -20,7 +21,12 @@ export default async function handler(
 
   switch (req.method) {
     case "GET":
-      await apiGetUserList(req, res);
+      const id = req.query.id;
+      if (id) {
+        await apiGetUser(req, res);
+      } else {
+        await apiGetUserList(req, res);
+      }
       break;
     case "POST":
       await apiCreateUser(req, res);

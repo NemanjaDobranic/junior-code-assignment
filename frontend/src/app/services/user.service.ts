@@ -1,8 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { ReplaySubject, take } from 'rxjs';
-import { CreateUserRequestDto, CreateUserResponseDto, UserResponseDto } from '../interfaces/user.model';
+import {
+  CreateUserRequestDto,
+  CreateUserResponseDto,
+  UserResponseDto,
+} from '../interfaces/user.model';
 import { CustomHttpClientService } from './custom-http-client.service';
 import { JwtService } from './jwt.service';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +29,10 @@ export class UserService {
     if (this.jwtService.payload) {
       this._userId = this.jwtService.payload.id.toString();
       this.http
-        .get<UserResponseDto>(this._resource + '/' + this._userId)
+        .get<UserResponseDto>(
+          this._resource,
+          new HttpParams().set('id', this._userId)
+        )
         .pipe(take(1))
         .subscribe({
           next: (user) => this._userSubject.next(user),

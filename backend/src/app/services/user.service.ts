@@ -24,6 +24,26 @@ const getUserList: ApiHandlerFunction<UserResponseDto[]> = async (
   res.status(StatusCodes.OK).json(userList);
 };
 
+const getUser: ApiHandlerFunction<UserResponseDto> = async (
+  req,
+  res,
+  prisma: PrismaClient
+) => {
+  const userId = Number.parseInt(req.query.id as string);
+  const user = (await prisma.user.findFirst({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    },
+    where: {
+      id: userId,
+    },
+  })) as UserResponseDto;
+
+  res.status(StatusCodes.OK).json(user);
+};
+
 async function createUser(
   req: NextApiRequest,
   res: NextApiResponse<UserResponseDto | ErrorResponseDto>,
@@ -69,5 +89,6 @@ async function removeUser(
 }
 
 export const apiGetUserList = withApiHandler(getUserList);
+export const apiGetUser = withApiHandler(getUser);
 export const apiCreateUser = withApiHandler(createUser);
 export const apiRemoveUser = withApiHandler(removeUser);
