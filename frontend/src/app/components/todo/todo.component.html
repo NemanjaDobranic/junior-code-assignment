@@ -17,6 +17,8 @@
     <h4 class="font-semibold ml-3 text-lg">John's Tasks</h4>
   </div>
 
+  <app-search-bar (textChanged)="searchFor($event)" />
+
   <ng-container *ngIf="todoList">
     <ng-container *ngFor="let todo of todoList">
       <app-todo-item

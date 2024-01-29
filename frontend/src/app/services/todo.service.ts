@@ -10,8 +10,10 @@ export class TodoService {
   private _resource = '/todos';
   private http = inject(CustomHttpClientService);
 
-  getTodoList() {
-    return this.http.get<TodoResponseDto[]>(this._resource);
+  getTodoList(name?: string) {
+    let params = new HttpParams();
+    if (name) params = new HttpParams().set('name', name);
+    return this.http.get<TodoResponseDto[]>(this._resource, params);
   }
 
   toggleComplete(id: number) {

@@ -1,19 +1,21 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { TodoService } from '../../services/todo.service';
-import { take } from 'rxjs';
+import { Subject, debounceTime, switchMap, take } from 'rxjs';
 import { TodoRequestDto, TodoResponseDto } from '../../interfaces/todo.model';
 import { CommonModule } from '@angular/common';
 import { TodoItemComponent } from '../todo-item/todo-item.component';
 import { FormsModule } from '@angular/forms';
+import { SearchBarComponent } from '../search-bar/search-bar.component';
 
 @Component({
   selector: 'app-todo',
   standalone: true,
-  imports: [CommonModule, TodoItemComponent, FormsModule],
+  imports: [CommonModule, TodoItemComponent, FormsModule, SearchBarComponent],
   templateUrl: './todo.component.html',
   styleUrl: './todo.component.scss',
 })
-export class TodoComponent {
+export class TodoComponent implements OnDestroy {
+  private _searchSubject = new Subject<string>();
   private _todoService = inject(TodoService);
   todoName: string = '';
   todoList: TodoResponseDto[] = [];
@@ -25,6 +27,7 @@ export class TodoComponent {
       .subscribe({
         next: (res) => (this.todoList = res),
       });
+    this.setupSearchListener();
   }
 
   toggleComplete(id: number) {
@@ -62,5 +65,22 @@ export class TodoComponent {
       .subscribe((res) => {
         this.todoList = [res, ...this.todoList];
       });
+  }
+
+  searchFor(text: string) {
+    this._searchSubject.next(text);
+  }
+
+  private setupSearchListener() {
+    this._searchSubject
+      .pipe(
+        debounceTime(300),
+        switchMap((text) => this._todoService.getTodoList(text))
+      )
+      .subscribe((res) => (this.todoList = res));
+  }
+
+  ngOnDestroy(): void {
+    this._searchSubject.unsubscribe();
   }
 }

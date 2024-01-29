@@ -1,0 +1,12 @@
+<div class="mb-3">
+  <div class="relative mb-4 flex w-full flex-wrap items-stretch">
+    <input
+      type="search"
+      class="relative m-0 block min-w-0 flex-auto rounded border border-solid border-gray-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-indigo-500"
+      placeholder="Search"
+      aria-label="Search"
+      [(ngModel)]="text"
+      (ngModelChange)="onTextChange($event)"
+    />
+  </div>
+</div>
