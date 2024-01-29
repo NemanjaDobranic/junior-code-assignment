@@ -8,25 +8,25 @@ import { HttpParams } from '@angular/common/http';
 })
 export class TodoService {
   private _resource = '/todos';
-  private http = inject(CustomHttpClientService);
+  private _http = inject(CustomHttpClientService);
 
   getTodoList(name?: string) {
     let params = new HttpParams();
     if (name) params = new HttpParams().set('name', name);
-    return this.http.get<TodoResponseDto[]>(this._resource, params);
+    return this._http.get<TodoResponseDto[]>(this._resource, params);
   }
 
   toggleComplete(id: number) {
     const params = new HttpParams().set('id', id);
-    return this.http.patch<TodoResponseDto>(this._resource, params);
+    return this._http.patch<TodoResponseDto>(this._resource, params);
   }
 
   remove(id: number) {
     const params = new HttpParams().set('id', id);
-    return this.http.delete<TodoResponseDto>(this._resource, params);
+    return this._http.delete<TodoResponseDto>(this._resource, params);
   }
 
   create(body: TodoRequestDto) {
-    return this.http.post<TodoResponseDto>(this._resource, body);
+    return this._http.post<TodoResponseDto>(this._resource, body);
   }
 }
