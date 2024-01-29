@@ -32,14 +32,15 @@ export class CustomHttpClientService {
     });
   }
 
-  patch<T>(path: string, body?: any): Observable<T> {
+  patch<T>(path: string, params?: HttpParams, body?: any): Observable<T> {
     return this.http.patch<T>(environment.apiUrl + path, body, {
       headers: {
         Authorization: 'Bearer ' + this.token,
       },
+      params: params ? params : {},
     });
   }
-  
+
   delete<T>(path: string, body?: any): Observable<T> {
     return this.http.delete<T>(environment.apiUrl + path, {
       headers: {
