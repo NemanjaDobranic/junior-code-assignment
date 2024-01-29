@@ -6,11 +6,19 @@ import {
   apiRemoveTodo,
   apiToggleComplete,
 } from "@/app/services/todo.service";
+import NextCors from "nextjs-cors";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  await NextCors(req, res, {
+    // Options
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+    origin: "*",
+    optionsSuccessStatus: 200,
+  });
+
   switch (req.method) {
     case "GET":
       await apiGetTodoList(req, res);
