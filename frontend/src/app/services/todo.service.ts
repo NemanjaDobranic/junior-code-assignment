@@ -18,4 +18,9 @@ export class TodoService {
     const params = new HttpParams().set('id', id);
     return this.http.patch<TodoResponseDto>(this._resource, params);
   }
+
+  remove(id: number) {
+    const params = new HttpParams().set('id', id);
+    return this.http.delete<TodoResponseDto>(this._resource, params);
+  }
 }

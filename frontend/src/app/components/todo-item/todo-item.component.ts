@@ -11,8 +11,13 @@ import { TodoResponseDto } from '../../interfaces/todo.model';
 export class TodoItemComponent {
   @Input() data!: TodoResponseDto;
   @Output() completed = new EventEmitter<number>();
+  @Output() removed = new EventEmitter<number>();
 
   toggleComplete() {
     this.completed.emit(this.data.id);
+  }
+
+  remove() {
+    this.removed.emit(this.data.id);
   }
 }

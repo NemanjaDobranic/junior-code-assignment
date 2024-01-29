@@ -19,7 +19,11 @@
 
   <ng-container *ngIf="todoList">
     <ng-container *ngFor="let todo of todoList">
-      <app-todo-item [data]="todo" (completed)="toggleComplete($event)" />
+      <app-todo-item
+        [data]="todo"
+        (completed)="toggleComplete($event)"
+        (removed)="removeItem($event)"
+      />
     </ng-container>
   </ng-container>
 

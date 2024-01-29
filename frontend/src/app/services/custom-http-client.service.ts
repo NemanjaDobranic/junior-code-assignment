@@ -41,12 +41,13 @@ export class CustomHttpClientService {
     });
   }
 
-  delete<T>(path: string, body?: any): Observable<T> {
+  delete<T>(path: string, params?: any, body?: any): Observable<T> {
     return this.http.delete<T>(environment.apiUrl + path, {
       headers: {
         Authorization: 'Bearer ' + this.token,
       },
       body: body,
+      params: params ? params : {},
     });
   }
 }

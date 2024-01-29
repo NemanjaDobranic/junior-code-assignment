@@ -38,4 +38,9 @@ export class TodoComponent {
       this._todoService.toggleComplete(id).pipe(take(1)).subscribe();
     }
   }
+
+  removeItem(id: number) {
+    this.todoList = this.todoList.filter((item) => item.id != id);
+    this._todoService.remove(id).subscribe();
+  }
 }
