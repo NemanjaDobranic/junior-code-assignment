@@ -1,9 +1,10 @@
 import { StatusCodes } from "http-status-codes";
 import { NextApiRequest, NextApiResponse } from "next";
-import { TodoResponseDto } from "../dto/todo-dto.interface";
-import { ErrorResponseDto } from "../dto/error-dto.interface";
+import { TodoResponseDto } from "../dto/todo.dto";
+import { ErrorResponseDto } from "../dto/error.dto";
 import { ApiHandlerFunction, withApiHandler } from "../helpers/api-handler";
 import { PrismaClient } from "@prisma/client";
+import { JwtPayloadDto } from "../dto/auth.dto";
 
 const getTodoList: ApiHandlerFunction<TodoResponseDto[]> = async (
   req,
@@ -11,6 +12,7 @@ const getTodoList: ApiHandlerFunction<TodoResponseDto[]> = async (
   prisma: PrismaClient
 ) => {
   const { name } = req.query;
+  const user: JwtPayloadDto = JSON.parse(req.headers["x-user"] as string);
 
   const todoList = await prisma.todo.findMany({
     select: {
@@ -20,8 +22,9 @@ const getTodoList: ApiHandlerFunction<TodoResponseDto[]> = async (
     },
     where: {
       name: {
-        contains: name ? name as string : "",
+        contains: name ? (name as string) : "",
       },
+      userId: user.id,
       deleted: false,
     },
     orderBy: { id: "desc" },
@@ -35,27 +38,19 @@ async function createTodo(
   res: NextApiResponse<TodoResponseDto | ErrorResponseDto>,
   prisma: PrismaClient
 ) {
-  try {
-    const { name, completed } = req.body;
+  const { name, completed } = req.body;
 
-    const newTodo = await prisma.todo.create({
-      data: { userId: 1, name, completed, deleted: false },
-    });
+  const user: JwtPayloadDto = JSON.parse(req.headers["x-user"] as string);
 
-    res.status(StatusCodes.CREATED).json({
-      id: newTodo.id,
-      name: newTodo.name,
-      completed: newTodo.completed,
-    });
-  } catch (error) {
-    console.error("Error creating a todo:", error);
-    const errorResponse: ErrorResponseDto = {
-      error: "Internal Server Error",
-    };
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(errorResponse);
-  } finally {
-    await prisma.$disconnect();
-  }
+  const newTodo = await prisma.todo.create({
+    data: { userId: user.id, name, completed, deleted: false },
+  });
+
+  res.status(StatusCodes.CREATED).json({
+    id: newTodo.id,
+    name: newTodo.name,
+    completed: newTodo.completed,
+  });
 }
 
 async function toggleComplete(
@@ -64,15 +59,19 @@ async function toggleComplete(
   prisma: PrismaClient
 ) {
   const { id } = req.query;
+  const user: JwtPayloadDto = JSON.parse(req.headers["x-user"] as string);
 
   if (!id) {
-    return res.status(400).json({ error: "Missing ID parameter" });
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "Missing ID parameter" });
   }
 
   const todoId = parseInt(id as string, 10);
   const existingTodo = await prisma.todo.findUnique({
     where: {
       id: todoId,
+      userId: user.id,
     },
   });
 
@@ -99,6 +98,7 @@ async function removeTodo(
   prisma: PrismaClient
 ) {
   const { id } = req.query;
+  const user: JwtPayloadDto = JSON.parse(req.headers["x-user"] as string);
 
   if (!id) {
     return res
@@ -108,25 +108,17 @@ async function removeTodo(
 
   const todoId = parseInt(id as string, 10);
 
-  try {
-    const deletedTodo = await prisma.todo.update({
-      where: {
-        id: todoId,
-      },
-      data: {
-        deleted: true,
-      },
-    });
+  const deletedTodo = await prisma.todo.update({
+    where: {
+      id: todoId,
+      userId:user.id
+    },
+    data: {
+      deleted: true,
+    },
+  });
 
-    res.status(StatusCodes.OK).json(deletedTodo);
-  } catch (error) {
-    console.error("Error deleting Todo:", error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
-  }
+  res.status(StatusCodes.OK).json(deletedTodo);
 }
 
 export const apiGetTodoList = withApiHandler(getTodoList);

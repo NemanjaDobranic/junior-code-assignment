@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
-import { ErrorResponseDto } from "@/app/dto/error-dto.interface";
+import { ErrorResponseDto } from "@/app/dto/error.dto";
 
 export type ApiHandlerFunction<T> = (
   req: NextApiRequest,
@@ -12,7 +12,6 @@ export type ApiHandlerFunction<T> = (
 export function withApiHandler<T>(handler: ApiHandlerFunction<T>) {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     const prisma = new PrismaClient();
-    
 
     try {
       await handler(req, res, prisma);
