@@ -16,6 +16,9 @@ const getTodoList: ApiHandlerFunction<TodoResponseDto[]> = async (
       name: true,
       completed: true,
     },
+    where: {
+      deleted: false,
+    },
   });
 
   res.status(StatusCodes.OK).json(todoList);
