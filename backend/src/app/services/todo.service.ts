@@ -19,6 +19,7 @@ const getTodoList: ApiHandlerFunction<TodoResponseDto[]> = async (
     where: {
       deleted: false,
     },
+    orderBy: { id: "desc" },
   });
 
   res.status(StatusCodes.OK).json(todoList);
