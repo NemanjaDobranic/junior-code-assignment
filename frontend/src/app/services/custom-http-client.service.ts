@@ -48,8 +48,6 @@ export class CustomHttpClientService {
   }
 
   patch<T>(path: string, params?: HttpParams, body?: any): Observable<T> {
-    this.spinnerService.start();
-
     return this.http
       .patch<T>(environment.apiUrl + path, body, {
         headers: {
@@ -57,15 +55,10 @@ export class CustomHttpClientService {
         },
         params: params ? params : {},
       })
-      .pipe(
-        catchError(this.alertService.errorHandler.bind(this.alertService)),
-        finalize(() => this.spinnerService.stop())
-      );
+      .pipe(catchError(this.alertService.errorHandler.bind(this.alertService)));
   }
 
   delete<T>(path: string, params?: any, body?: any): Observable<T> {
-    this.spinnerService.start();
-    
     return this.http
       .delete<T>(environment.apiUrl + path, {
         headers: {
@@ -74,9 +67,6 @@ export class CustomHttpClientService {
         body: body,
         params: params ? params : {},
       })
-      .pipe(
-        catchError(this.alertService.errorHandler.bind(this.alertService)),
-        finalize(() => this.spinnerService.stop())
-      );
+      .pipe(catchError(this.alertService.errorHandler.bind(this.alertService)));
   }
 }

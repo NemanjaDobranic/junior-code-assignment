@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { UserService } from '../../services/user.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
+import { SpinnerService } from '../../services/spinner.service';
 
 @Component({
   selector: 'app-todo',
@@ -26,9 +27,12 @@ export class TodoComponent implements OnDestroy {
   private _searchSubject = new Subject<string>();
   private _todoService = inject(TodoService);
   private _userService = inject(UserService);
+  private _spinnerService = inject(SpinnerService);
   user$ = this._userService.user$;
+  isLoading$ = this._spinnerService.isVisible$
   todoName: string = '';
   todoList: TodoResponseDto[] = [];
+  
 
   constructor() {
     this._todoService

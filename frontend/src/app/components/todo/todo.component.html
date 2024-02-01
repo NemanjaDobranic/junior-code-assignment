@@ -21,17 +21,19 @@
 
   <app-search-bar (textChanged)="searchFor($event)" />
 
-  <ng-container *ngIf="todoList">
-    <ng-container *ngFor="let todo of todoList">
-      <app-todo-item
-        [data]="todo"
-        (completed)="toggleComplete($event)"
-        (removed)="removeItem($event)"
-      />
+  <ng-container *ngIf="!(isLoading$ | async)">
+    <ng-container *ngIf="todoList">
+      <ng-container *ngFor="let todo of todoList">
+        <app-todo-item
+          [data]="todo"
+          (completed)="toggleComplete($event)"
+          (removed)="removeItem($event)"
+        />
+      </ng-container>
     </ng-container>
   </ng-container>
 
-  <app-spinner class="text-center"/>
+  <app-spinner class="text-center" />
 
   <button
     class="flex items-center w-full h-8 px-2 mt-2 text-sm font-medium rounded"
