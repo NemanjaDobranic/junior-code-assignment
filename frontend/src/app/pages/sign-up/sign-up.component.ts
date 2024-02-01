@@ -1,18 +1,22 @@
 import { Component, inject } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { CreateUserRequestDto } from '../../interfaces/user.model';
+import { SpinnerService } from '../../services/spinner.service';
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, AsyncPipe],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.scss',
 })
 export class SignUpComponent {
   private _userService = inject(UserService);
   private _router = inject(Router);
+  private _spinnerService = inject(SpinnerService);
+  isLoading$ = this._spinnerService.isVisible$;
 
   signUp(event: SubmitEvent) {
     event.preventDefault();
