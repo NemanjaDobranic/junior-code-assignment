@@ -7,11 +7,18 @@ import { TodoItemComponent } from '../todo-item/todo-item.component';
 import { FormsModule } from '@angular/forms';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { UserService } from '../../services/user.service';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
   selector: 'app-todo',
   standalone: true,
-  imports: [CommonModule, TodoItemComponent, FormsModule, SearchBarComponent],
+  imports: [
+    CommonModule,
+    TodoItemComponent,
+    FormsModule,
+    SearchBarComponent,
+    SpinnerComponent,
+  ],
   templateUrl: './todo.component.html',
   styleUrl: './todo.component.scss',
 })
