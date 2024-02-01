@@ -9,12 +9,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class JwtService {
   private _jwtService = inject(JwtHelperService);
-  private _tokenSubject = new BehaviorSubject<string | null>(null);
   private _token = localStorage.getItem(environment.tokenKey) as string;
-
-  get token$(): Observable<string | null>{
-    return this._tokenSubject.asObservable();
-  }
 
   get token() {
     return this._token;
@@ -23,7 +18,6 @@ export class JwtService {
   set token(value: string) {
     this._token = value;
     localStorage.setItem(environment.tokenKey, value);
-    this._tokenSubject.next(value);
   }
 
   get payload() {

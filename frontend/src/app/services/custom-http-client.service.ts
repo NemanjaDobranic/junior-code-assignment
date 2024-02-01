@@ -9,11 +9,12 @@ import { JwtService } from './jwt.service';
 })
 export class CustomHttpClientService {
   // services
-
   private http = inject(HttpClient);
   private jwtService = inject(JwtService);
 
-  private token = this.jwtService.token;
+  constructor() {
+    console.log(this.jwtService.token);
+  }
 
   get<T>(path: string, params?: HttpParams): Observable<T> {
     return this.http.get<T>(environment.apiUrl + path, {
@@ -27,7 +28,7 @@ export class CustomHttpClientService {
   post<T>(path: string, body: any): Observable<T> {
     return this.http.post<T>(environment.apiUrl + path, body, {
       headers: {
-        Authorization: 'Bearer ' + this.token,
+        Authorization: 'Bearer ' + this.jwtService.token,
       },
     });
   }
@@ -35,7 +36,7 @@ export class CustomHttpClientService {
   patch<T>(path: string, params?: HttpParams, body?: any): Observable<T> {
     return this.http.patch<T>(environment.apiUrl + path, body, {
       headers: {
-        Authorization: 'Bearer ' + this.token,
+        Authorization: 'Bearer ' + this.jwtService.token,
       },
       params: params ? params : {},
     });
@@ -44,7 +45,7 @@ export class CustomHttpClientService {
   delete<T>(path: string, params?: any, body?: any): Observable<T> {
     return this.http.delete<T>(environment.apiUrl + path, {
       headers: {
-        Authorization: 'Bearer ' + this.token,
+        Authorization: 'Bearer ' + this.jwtService.token,
       },
       body: body,
       params: params ? params : {},
